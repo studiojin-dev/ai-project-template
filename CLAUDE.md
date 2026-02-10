@@ -1,4 +1,4 @@
-# Gemini Agent Context
+# Claude Agent Context
 
 This project uses AGENTS.md as the canonical source of agent rules.
 

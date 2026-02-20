@@ -4,18 +4,22 @@ This repository uses AI coding agents.
 If rules are missing or unclear, the agent must ask before proceeding.
 
 ## Scope
+
 This file defines HOW the agent works.
 WHAT to build is defined in SPECS.
 WHY decisions were made is defined in ADRs.
 
 ## Core Rules
+
 - Prefer correctness and clarity over cleverness
 - Do not introduce new dependencies or services unless explicitly requested
 - Avoid large refactors unless explicitly requested
 - Preserve existing public behavior by default
 
 ## Documentation Rule (MUST)
+
 Consult authoritative documentation when tasks involve:
+
 - specific APIs, options, or signatures
 - version-dependent or “latest” behavior
 - deployment, auth, cloud, or security concerns
@@ -24,30 +28,79 @@ Consult authoritative documentation when tasks involve:
 If documentation is required and unavailable, ask for it or state uncertainty.
 
 ## ADR Rule (MUST)
+
 Architectural or design decisions with trade-offs MUST be recorded as ADRs
 (e.g. in `docs/adr/`).
 The agent MUST NOT override existing ADRs without updating them first.
 If a change introduces new constraints or non-obvious choices, stop and request an ADR.
 
 ## Plan Then Act
-For non-trivial tasks:
+
 1) Restate the goal in one sentence
 2) Propose a short plan
 3) (TDD) Red: write a failing test or a clear reproduction
 4) (TDD) Green: make the minimal change to pass
 5) (TDD) Blue: refactor for clarity and maintainability
 6) Summarize what changed and why
+7) Code Review to verify the goal, security, and license compliance; if not, go back to step 2
+
+## Iterative Validation Loop (MUST)
+
+For non-trivial implementation requests, the agent MUST execute iterative loops,
+not a single-pass implementation.
+
+Required baseline loop:
+
+1) Implement
+2) Code Review (findings prioritized by severity)
+3) Fix findings
+4) Code Review again
+
+If unresolved high-severity findings remain, new risks are discovered, or acceptance
+criteria are not fully met, the agent MUST:
+
+- re-plan the remaining work,
+- implement follow-up changes,
+- and repeat review + verification.
+
+Completion gate (all required):
+
+- no unresolved P0/P1 findings,
+- verification commands pass for touched scope (tests/build/lint),
+- requirements, ADR constraints, and license/security rules are satisfied.
 
 ## Verification
+
 Do not claim correctness without describing how to verify it
 (tests, build, or realistic checks).
 
 ## Repository Hygiene
+
 If a .gitignore file does not exist, create one before adding
 environment-, build-, or tool-specific files.
 
 ## Stop and Ask
+
 Ask before proceeding if requirements are unclear,
 changes are breaking, or behavior depends on docs or decisions.
 After completing any implementation work, the agent MUST ask the user
 whether a pull request draft is needed.
+
+## Documentation Workflow
+
+- ADRs MUST be written in `docs/adr/*.md`.
+- When an ADR is added or modified, `docs/adr/index.json` MUST be updated.
+- The ADR index MUST be generated using the `adr-index` skill.
+- AGENTS.md MUST NOT accumulate completed work logs.
+  Decisions MUST be recorded in ADRs; only links or short summaries are allowed here.
+
+### ADR Detection Rule
+
+If you make or rely on a decision that:
+
+- introduces architectural constraints,
+- involves trade-offs,
+- or is not obvious from code alone,
+
+you MUST pause and explicitly state:
+"An ADR is required for this decision."

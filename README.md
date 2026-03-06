@@ -1,0 +1,91 @@
+# AI Project Template
+
+This repository is a reusable instruction template for coding AI tools.
+It keeps repository rules tool-neutral while still supporting tool-specific entry files and an optional Codex global setup.
+
+## File Map
+
+- `AGENTS.md`: canonical repository rules shared across tools
+- `CODEX.md`: Codex entry file that points back to `AGENTS.md`
+- `CLAUDE.md`: Claude entry file that points back to `AGENTS.md`
+- `GEMINI.md`: Gemini entry file that points back to `AGENTS.md`
+- `CODEX_GLOBAL_AGENTS.md`: optional Codex global template for `~/.codex/AGENTS.md`
+
+## Usage Model
+
+Use the files in two separate ways:
+
+1. Repository-local setup
+   Copy `AGENTS.md` and the tool entry files you need into another repository.
+
+2. Optional Codex global setup
+   Copy `CODEX_GLOBAL_AGENTS.md` to `~/.codex/AGENTS.md` if you want stronger Codex orchestration defaults across all repositories.
+
+`AGENTS.md` stays repository-specific.
+`CODEX_GLOBAL_AGENTS.md` is personal Codex configuration.
+
+## Apply To Another Repository
+
+Run these commands from this template repository:
+
+```bash
+SOURCE_REPO="$(pwd)"
+TARGET_REPO="/path/to/your-project"
+
+cp "$SOURCE_REPO/AGENTS.md" "$TARGET_REPO/AGENTS.md"
+cp "$SOURCE_REPO/CODEX.md" "$TARGET_REPO/CODEX.md"
+cp "$SOURCE_REPO/CLAUDE.md" "$TARGET_REPO/CLAUDE.md"
+cp "$SOURCE_REPO/GEMINI.md" "$TARGET_REPO/GEMINI.md"
+```
+
+If the target repository does not use one of those tools, omit that file.
+
+## Install Codex Global Defaults
+
+Run this command from this template repository:
+
+```bash
+SOURCE_REPO="$(pwd)"
+mkdir -p "$HOME/.codex"
+cp "$SOURCE_REPO/CODEX_GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
+```
+
+That copy makes the checked-in Codex orchestration template active at `~/.codex/AGENTS.md`.
+
+## AI-Friendly Prompts
+
+You can also ask a coding AI to apply the template directly.
+
+### Repository-local setup
+
+```text
+Copy `AGENTS.md`, `CODEX.md`, `CLAUDE.md`, and `GEMINI.md` from this repository into the target repository root.
+Keep `AGENTS.md` as the canonical shared rules file.
+Keep the tool-specific files as lightweight entry files that direct the tool back to `AGENTS.md`.
+```
+
+### Codex global setup
+
+```text
+Copy `CODEX_GLOBAL_AGENTS.md` from this repository to `~/.codex/AGENTS.md`.
+If `~/.codex/AGENTS.md` already exists, replace it with the contents of `CODEX_GLOBAL_AGENTS.md`.
+Confirm that the final destination path is `~/.codex/AGENTS.md`.
+```
+
+## Tool Notes
+
+### Codex
+
+- Read `AGENTS.md` first for repository behavior.
+- Use `CODEX.md` as the repository entry file.
+- Use `CODEX_GLOBAL_AGENTS.md` only for the optional global Codex setup.
+
+### Claude
+
+- Read `AGENTS.md` first.
+- Use `CLAUDE.md` as the lightweight repository entry file.
+
+### Gemini
+
+- Read `AGENTS.md` first.
+- Use `GEMINI.md` as the lightweight repository entry file.

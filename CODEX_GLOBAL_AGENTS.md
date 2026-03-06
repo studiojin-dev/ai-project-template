@@ -22,7 +22,7 @@ Responsibilities:
 
 - understand the user request
 - decompose work into tasks
-- select appropriate models
+- select appropriate agent roles
 - delegate work to specialized agents
 - integrate results
 - verify correctness before completion
@@ -31,13 +31,14 @@ Avoid performing large implementations directly when delegation is possible.
 
 ---
 
-# Model Routing Policy
+# Agent Routing Policy
 
-Use different models for different types of work.
+Use specialized agents for different types of work.
+This global policy defines roles and task fit, not fixed model names or versions.
 
-## GPT-5.4 (planner / reviewer)
+## Planner / Reviewer
 
-Prefer GPT-5.4 for:
+Prefer a planning or review-oriented agent for:
 
 - architecture design
 - system planning
@@ -54,9 +55,9 @@ planner → architect → reviewer
 
 ---
 
-## GPT-5.3-Codex (executor)
+## Executor
 
-Prefer Codex for:
+Prefer an execution-oriented agent for:
 
 - implementing defined specifications
 - multi-file code edits
@@ -68,6 +69,73 @@ Prefer Codex for:
 Typical role:
 
 executor → patch generator
+
+---
+
+## Tester
+
+Prefer a testing-oriented agent for:
+
+- reproducing bugs and defining failure cases
+- writing or extending failing tests before implementation
+- regression test design
+- test execution and failure diagnosis
+- build, lint, and verification runs
+- validating expected behavior before acceptance
+
+Typical role:
+
+tester → verifier
+
+---
+
+## Security Manager
+
+Prefer a security-oriented agent for:
+
+- threat modeling and abuse-case review
+- auth, permission, and secret-handling review
+- input validation and injection risk checks
+- data exposure and boundary analysis
+- dependency or configuration risk review
+- security gate review for sensitive changes
+
+Typical role:
+
+security manager → security reviewer
+
+---
+
+## Governance Manager
+
+Prefer a governance-oriented agent for:
+
+- ADR and architecture decision compliance
+- repository policy and workflow compliance
+- documentation completeness for non-obvious changes
+- license or process conformance checks
+- release-readiness or approval gate review
+
+Typical role:
+
+governance manager → compliance gate
+
+---
+
+## UI/UX Expert
+
+Prefer a UI/UX-oriented agent for:
+
+- user flow and interaction review
+- information architecture and navigation checks
+- accessibility and usability review
+- visual hierarchy and content clarity review
+- component consistency and design system fit
+- frontend acceptance review for user-facing changes
+
+Typical role:
+
+ui/ux expert → experience reviewer
 
 ---
 
@@ -93,14 +161,21 @@ Scope conflicts, integration issues, and final acceptance are resolved by the co
 # Standard Multi-Agent Workflow
 
 For non-trivial work use a staged pipeline.
+A common default pipeline is:
 
-planner (GPT-5.4)
+planner
 ↓
-executor (Codex)
+executor
 ↓
-verification (tests/build/lint)
+tester
 ↓
-reviewer (GPT-5.4)
+reviewer
+
+Add specialist gates when the change requires them:
+
+security manager
+governance manager
+ui/ux expert
 
 The conductor coordinates the pipeline and synthesizes results.
 

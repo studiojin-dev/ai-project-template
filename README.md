@@ -52,6 +52,71 @@ cp "$SOURCE_REPO/CODEX_GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
 
 That copy makes the checked-in Codex orchestration template active at `~/.codex/AGENTS.md`.
 
+## Optional Skill Recommendation
+
+This template does not require ADRs.
+If your project later starts recording architectural decisions, I recommend also
+adding [`adr-index-skill`](https://github.com/studiojin-dev/adr-index-skill)
+to your tool's skills directory.
+
+It is a lightweight skill for Codex, Claude, and Gemini that keeps ADR history
+out of `AGENTS.md` and generates a small searchable index.
+
+## Install `adr-index-skill`
+
+Source: [studiojin-dev/adr-index-skill](https://github.com/studiojin-dev/adr-index-skill)
+
+### Codex global install
+
+```bash
+git clone https://github.com/studiojin-dev/adr-index-skill.git \
+  ~/.codex/skills/adr-index
+```
+
+Restart Codex after installation.
+
+### Codex repository-scoped install
+
+```bash
+mkdir -p .codex/skills
+git clone https://github.com/studiojin-dev/adr-index-skill.git \
+  .codex/skills/adr-index
+```
+
+### Claude install
+
+Repository-scoped:
+
+```bash
+mkdir -p .claude/skills
+git clone https://github.com/studiojin-dev/adr-index-skill.git \
+  .claude/skills/adr-index
+```
+
+Global:
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/studiojin-dev/adr-index-skill.git \
+  ~/.claude/skills/adr-index
+```
+
+### Gemini install
+
+Repository-scoped:
+
+```bash
+mkdir -p .gemini/skills
+git clone https://github.com/studiojin-dev/adr-index-skill.git \
+  .gemini/skills/adr-index
+```
+
+If your Gemini environment supports a global skills directory, you can install
+the same repository there as well.
+
+After installation, invoke the skill with `$adr-index` in Codex or `/adr-index`
+in Claude and Gemini.
+
 ## AI-Friendly Prompts
 
 You can also ask a coding AI to apply the template directly.

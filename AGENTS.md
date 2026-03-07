@@ -27,6 +27,16 @@ Consult authoritative documentation when tasks involve:
 
 If documentation is required and unavailable, ask for it or state uncertainty.
 
+## Localization / Translation Rule (MUST)
+
+When a task includes i18n or localization work:
+
+- use a dedicated translator/localization agent when the tool supports specialized routing; otherwise apply the same constraints directly
+- preserve placeholders, ICU message syntax, variables, HTML/Markdown, and key structure exactly
+- prefer the strongest translation-capable model already available in the active AI toolchain; if an external service is required, use an approved frontier-quality model endpoint
+- do not rely on free/public commodity machine-translation APIs or unofficial wrappers as the primary translation source
+- escalate when glossary, tone, product terminology, or locale-specific style guidance is missing
+
 ## ADR Rule (MUST)
 
 Architectural or design decisions with trade-offs MUST be recorded as ADRs

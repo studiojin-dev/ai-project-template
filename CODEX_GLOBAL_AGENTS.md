@@ -139,6 +139,28 @@ ui/ux expert → experience reviewer
 
 ---
 
+## Translator
+
+Prefer a translation/localization-oriented agent for:
+
+- i18n message translation and locale backfill
+- glossary and product terminology consistency
+- locale QA, copy naturalness, and cultural adaptation
+- preserving placeholders, ICU/pluralization syntax, Markdown/HTML, and key structure
+- reviewing translation diffs, fallback strings, and missing locale coverage
+
+Quality bar:
+
+- use the strongest translation-capable model available in the active AI coding toolchain
+- do not use free/public commodity machine-translation APIs or unofficial wrappers as the primary translation source
+- escalate when glossary, brand voice, or locale-specific rules are missing
+
+Typical role:
+
+translator → localization reviewer
+
+---
+
 ## Multi-Agent Communication Protocol
 
 The conductor owns delegation, integration, and final acceptance.
@@ -176,6 +198,7 @@ Add specialist gates when the change requires them:
 security manager
 governance manager
 ui/ux expert
+translator
 
 The conductor coordinates the pipeline and synthesizes results.
 

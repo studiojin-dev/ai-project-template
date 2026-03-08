@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Review Lane"
+  short_description: "Security review workflow for risky changes"
+  default_prompt: "Use $security-review-lane to review this change for auth, secrets, trust boundaries, and injection risk."

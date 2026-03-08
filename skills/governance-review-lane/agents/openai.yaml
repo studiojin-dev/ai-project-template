@@ -1,0 +1,4 @@
+interface:
+  display_name: "Governance Review Lane"
+  short_description: "Governance and ADR compliance workflow"
+  default_prompt: "Use $governance-review-lane to review this change for ADR, policy, release, and process compliance."

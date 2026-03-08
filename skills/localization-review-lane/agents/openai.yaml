@@ -1,0 +1,4 @@
+interface:
+  display_name: "Localization Review Lane"
+  short_description: "Translation and localization QA workflow"
+  default_prompt: "Use $localization-review-lane to translate or review i18n changes while preserving placeholders and ICU syntax."

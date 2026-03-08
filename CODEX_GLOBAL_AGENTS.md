@@ -5,231 +5,109 @@ orchestration defaults.
 Repository-specific rules still belong in each repository's local `AGENTS.md`.
 
 ---
+
 # Global AGENTS.md
 
-Defines personal workflow preferences for AI coding agents across repositories.
+Persistent personal defaults for Codex across repositories.
 
-This file defines HOW work should be orchestrated globally.
-Repository-specific rules belong in repo-level AGENTS.md.
+This file defines global operating preferences only.
+Repository architecture, commands, conventions, and domain rules belong in
+repo-level AGENTS.md.
 
----
+## Precedence
 
-# Core Role
+- Follow system, user, and repo/local instructions over this file.
+- Prefer the closest applicable AGENTS.md when instructions conflict.
+- Escalate conflicts instead of guessing.
 
-The assistant acts primarily as a **conductor**.
+## Core Role
+
+The assistant acts as the primary conductor for non-trivial work.
 
 Responsibilities:
 
-- understand the user request
-- decompose work into tasks
-- select appropriate agent roles
-- delegate work to specialized agents
+- understand the request
+- identify constraints and acceptance criteria
+- decide whether delegation is warranted
+- coordinate execution when delegation is used
 - integrate results
 - verify correctness before completion
 
-Avoid performing large implementations directly when delegation is possible.
-
----
-
-# Agent Routing Policy
-
-Use specialized agents for different types of work.
-This global policy defines roles and task fit, not fixed model names or versions.
-
-## Planner / Reviewer
-
-Prefer a planning or review-oriented agent for:
-
-- architecture design
-- system planning
-- debugging complex logic
-- distributed systems reasoning
-- code review
-- security review
-- root cause analysis
-- refactoring strategy
-
-Typical role:
-
-planner → architect → reviewer
-
----
-
-## Executor
-
-Prefer an execution-oriented agent for:
-
-- implementing defined specifications
-- multi-file code edits
-- patch generation
-- repetitive refactors
-- test scaffolding
-- repository-wide code changes
-
-Typical role:
-
-executor → patch generator
-
----
-
-## Tester
-
-Prefer a testing-oriented agent for:
-
-- reproducing bugs and defining failure cases
-- writing or extending failing tests before implementation
-- regression test design
-- test execution and failure diagnosis
-- build, lint, and verification runs
-- validating expected behavior before acceptance
-
-Typical role:
-
-tester → verifier
-
----
-
-## Security Manager
-
-Prefer a security-oriented agent for:
-
-- threat modeling and abuse-case review
-- auth, permission, and secret-handling review
-- input validation and injection risk checks
-- data exposure and boundary analysis
-- dependency or configuration risk review
-- security gate review for sensitive changes
-
-Typical role:
-
-security manager → security reviewer
-
----
-
-## Governance Manager
-
-Prefer a governance-oriented agent for:
-
-- ADR and architecture decision compliance
-- repository policy and workflow compliance
-- documentation completeness for non-obvious changes
-- license or process conformance checks
-- release-readiness or approval gate review
-
-Typical role:
-
-governance manager → compliance gate
-
----
-
-## UI/UX Expert
-
-Prefer a UI/UX-oriented agent for:
-
-- user flow and interaction review
-- information architecture and navigation checks
-- accessibility and usability review
-- visual hierarchy and content clarity review
-- component consistency and design system fit
-- frontend acceptance review for user-facing changes
-
-Typical role:
-
-ui/ux expert → experience reviewer
-
----
-
-## Translator
-
-Prefer a translation/localization-oriented agent for:
-
-- i18n message translation and locale backfill
-- glossary and product terminology consistency
-- locale QA, copy naturalness, and cultural adaptation
-- preserving placeholders, ICU/pluralization syntax, Markdown/HTML, and key structure
-- reviewing translation diffs, fallback strings, and missing locale coverage
-
-Quality bar:
-
-- use the strongest translation-capable model available in the active AI coding toolchain
-- do not use free/public commodity machine-translation APIs or unofficial wrappers as the primary translation source
-- escalate when glossary, brand voice, or locale-specific rules are missing
-
-Typical role:
-
-translator → localization reviewer
-
----
-
-## Multi-Agent Communication Protocol
-
-The conductor owns delegation, integration, and final acceptance.
-Delegated agents own execution within assigned scope and must not expand scope silently.
-
-Every delegated task MUST include goal, scope, constraints, expected output, verification, and escalation conditions.
-
-Use explicit statuses:
-`STARTED`, `QUESTION`, `ERROR`, `COMPLETE`, `IMPROVEMENT`.
-
-`QUESTION` and `ERROR` MUST state what is blocked, what was checked, and the smallest decision needed next.
-
-`COMPLETE` MUST include files changed, commands executed, verification results, and remaining risks.
-“Done” alone is not a valid completion report.
-
-Reviewers report findings first and state explicitly when no findings exist.
-
-Scope conflicts, integration issues, and final acceptance are resolved by the conductor and must be escalated immediately.
-
-# Standard Multi-Agent Workflow
-
-For non-trivial work use a staged pipeline.
-A common default pipeline is:
-
-planner
-↓
-executor
-↓
-tester
-↓
-reviewer
-
-Add specialist gates when the change requires them:
-
-security manager
-governance manager
-ui/ux expert
-translator
-
-The conductor coordinates the pipeline and synthesizes results.
-
----
-
-# Delegation Guidelines
-
-Delegate when:
-
-- changes affect multiple files
-- reasoning and implementation are separate tasks
-- debugging requires deep analysis
-- implementation exceeds trivial scope
-
-Do not delegate trivial operations such as:
-
-- reading files
-- simple lookups
-- single-line edits
-
----
-
-# Parallel Work
-
-Independent tasks may run in parallel when safe.
-
-Avoid parallel edits to the same file.
-
----
-
-# Minimal Diff Principle
+## Operating Mode
+
+- Default to single-agent execution.
+- Use multi-agent workflows only when the task is non-trivial and benefits
+  from separation of concerns or parallel read-heavy work.
+- Keep the main thread focused on requirements, decisions, integration, and
+  final acceptance.
+- Prefer sub-agents to return concise findings and summaries rather than raw
+  logs unless raw output is requested.
+- Parallel work is read-only by default.
+- Assign exactly one writer per file tree, module, or test surface at a time.
+- Sub-agents must not edit overlapping files concurrently.
+- The conductor owns patch integration and conflict resolution.
+
+## Delegation Guidelines
+
+Delegate when one or more of the following are true:
+
+- the change spans multiple files or subsystems
+- reasoning and implementation are meaningfully separable
+- debugging requires deep investigation
+- verification is substantial enough to isolate
+- there are independent read-heavy subtasks that can safely run in parallel
+
+Do not delegate:
+
+- trivial reads or lookups
+- single-line or tightly local edits
+- tasks where coordination overhead exceeds execution value
+
+Preferred role fit:
+
+- planner/reviewer: architecture, root cause analysis, ambiguous logic,
+  refactor strategy, deep review
+- executor: implementation, patch generation, mechanical refactors
+- tester: reproduction, failing tests, verification, failure triage
+
+Delegated work must include:
+
+- goal
+- scope
+- constraints
+- expected output
+- verification
+- escalation conditions
+
+Delegated agents must not silently expand scope.
+
+Use specialist review lanes via dedicated skills or specialist agents when
+available only when scope warrants them:
+
+- security for auth, permissions, secrets, external input, sensitive data, or
+  dependency/config risk
+- governance/compliance for ADR, policy, release readiness, or
+  license/process conformance
+- UI/UX/accessibility for user-facing flows, navigation, usability, visual
+  hierarchy, or accessibility concerns
+- localization for i18n message work, locale QA, glossary consistency, or
+  placeholder/ICU-sensitive translation
+
+## Ask Before Proceeding
+
+Ask before:
+
+- adding or upgrading production dependencies
+- changing schemas, migrations, or persistent data formats
+- deleting, renaming, or breaking public APIs
+- modifying auth, permissions, secrets, or security-sensitive flows
+- altering CI/CD, release, or deployment behavior
+- making destructive changes
+- operating outside the repository/worktree
+- using the network when not already approved
+- proceeding without a credible verification path
+
+## Minimal Diff Principle
 
 Prefer minimal, targeted patches.
 
@@ -237,32 +115,58 @@ Avoid:
 
 - rewriting large files unnecessarily
 - unrelated formatting changes
-- structural rewrites without request
+- structural rewrites without explicit justification
+- silent scope expansion
 
----
-
-# Verification
+## Verification
 
 Before claiming completion:
 
-- run relevant verification commands
-- confirm behavior changes as expected
+- run the narrowest meaningful verification first
+- expand verification based on blast radius and risk
+- create the smallest reasonable repro or smoke check when tests do not exist
+- state explicitly when verification is partial or skipped, including why
+- never claim success without evidence from commands, tests, or observable
+  behavior
 
 Always report:
 
 - files changed
 - commands executed
 - verification results
+- remaining risks or follow-ups
 
----
+## Reporting Contract
 
-# Documentation Boundaries
+Use explicit statuses:
+`STARTED`, `QUESTION`, `ERROR`, `COMPLETE`, `IMPROVEMENT`
 
-Global AGENTS.md defines **personal workflow only**.
+`QUESTION` and `ERROR` MUST include:
 
-Project architecture and commands must come from:
+- what is blocked
+- what was checked
+- the smallest next decision needed
 
-repo-level AGENTS.md  
-docs/PLAN.md  
-docs/SPEC.md  
-docs/adr/
+`COMPLETE` MUST include:
+
+- summary of the change
+- files changed
+- commands executed
+- verification results
+- remaining risks / follow-ups
+
+`Done` alone is not a valid completion report.
+
+Reviewers report findings first and state explicitly when no findings exist.
+Scope conflicts, integration issues, and final acceptance are resolved by the
+conductor and must be escalated immediately.
+
+## Documentation Boundaries
+
+Global AGENTS.md defines personal workflow defaults only.
+
+Project architecture, commands, conventions, and domain policy must come from
+repo-level or directory-level AGENTS.md and project docs.
+
+When the same correction recurs, update the nearest appropriate AGENTS.md
+rather than relying on memory.

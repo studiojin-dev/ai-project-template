@@ -7,7 +7,7 @@ If rules are missing or unclear, the agent must ask before proceeding.
 
 This file defines HOW the agent works.
 WHAT to build is defined in SPECS.
-WHY decisions were made is defined in ADRs.
+WHY decisions were made is defined in ADRs when the project uses them.
 
 ## Core Rules
 
@@ -37,12 +37,26 @@ When a task includes i18n or localization work:
 - do not rely on free/public commodity machine-translation APIs or unofficial wrappers as the primary translation source
 - escalate when glossary, tone, product terminology, or locale-specific style guidance is missing
 
+## Specialist Lanes
+
+When the active tool supports installed skills or specialist agents, prefer the
+bundled specialist lanes for:
+
+- security review
+- governance/compliance review
+- UI/UX/accessibility review
+- localization review
+
+If the tool does not support installed skills or specialist agents, apply the
+same constraints directly.
+
 ## ADR Rule (MUST)
 
-Architectural or design decisions with trade-offs MUST be recorded as ADRs
-(e.g. in `docs/adr/`).
+If the project uses ADRs, architectural or design decisions with trade-offs
+MUST be recorded as ADRs (e.g. in `docs/adr/`).
 The agent MUST NOT override existing ADRs without updating them first.
-If a change introduces new constraints or non-obvious choices, stop and request an ADR.
+If a change introduces new constraints or non-obvious choices in a project that
+uses ADRs, stop and request an ADR.
 
 ## Plan Then Act
 
@@ -98,11 +112,16 @@ whether a pull request draft is needed.
 
 ## Documentation Workflow
 
+This template does not require ADRs by default.
+If a project adopts ADRs:
+
 - ADRs MUST be written in `docs/adr/*.md`.
 - When an ADR is added or modified, `docs/adr/index.json` MUST be updated.
 - The ADR index MUST be generated using the `adr-index` skill.
-- AGENTS.md MUST NOT accumulate completed work logs.
-  Decisions MUST be recorded in ADRs; only links or short summaries are allowed here.
+
+AGENTS.md MUST NOT accumulate completed work logs.
+If the project uses ADRs, decisions MUST be recorded there; only links or short
+summaries are allowed here.
 
 ### ADR Detection Rule
 
@@ -112,5 +131,5 @@ If you make or rely on a decision that:
 - involves trade-offs,
 - or is not obvious from code alone,
 
-you MUST pause and explicitly state:
+then, in projects that use ADRs, you MUST pause and explicitly state:
 "An ADR is required for this decision."

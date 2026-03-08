@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI/UX Review Lane"
+  short_description: "UI, UX, and accessibility review workflow"
+  default_prompt: "Use $ui-ux-review-lane to review this user-facing change for usability, hierarchy, and accessibility issues."
